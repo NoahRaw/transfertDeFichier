@@ -18,7 +18,19 @@ public class Main{
             sv=new ServerSocket(63);
             s=sv.accept();
             serveur=new Serveur3(s);
-            // serveur.copyFile("h1.mp3");
+            while(true)
+            {
+                DataInputStream dis=new DataInputStream(serveur.getSock().getInputStream());  
+                String todo=(String)dis.readUTF();
+                String fileName=(String)dis.readUTF();
+                System.out.println("commande="+todo);
+                System.out.println("fileName="+fileName);
+
+                if(todo.equalsIgnoreCase("envoyer"))
+                {
+                    serveur.copyFile(fileName);
+                }
+            }
             // serveur.recuperer();
         } 
         catch (Exception ex) 

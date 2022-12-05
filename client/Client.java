@@ -1,6 +1,7 @@
 package trans;
 
 import java.net.*;
+import java.util.concurrent.ExecutionException;
 import java.io.*;
  
 public class Client {
@@ -20,6 +21,18 @@ public class Client {
 
     public void sendFileServeurPrincipal(String fileName) throws Exception
     {
+        try 
+        {
+            BufferedWriter sortie = new BufferedWriter(new FileWriter("liste.txt", true));
+            sortie.write(fileName+"\n");
+            sortie.close();
+            System.out.println("Le texte a été écrit avec succès");
+        } 
+        catch (IOException e) 
+        {
+            e.printStackTrace();
+        }
+
         FileInputStream inf=new FileInputStream(new File(fileName));
         ObjectOutputStream out=new ObjectOutputStream(getS().getOutputStream());               
         byte buf[] = new byte[1024];
@@ -28,7 +41,7 @@ public class Client {
             out.write(buf,0,n);
         }
         inf.close();
-        out.close();           
+        // out.close();           
     }
 
     public void recuperer(String name) throws Exception
@@ -48,5 +61,24 @@ public class Client {
         }
         in.close();
         out.close();
+        dout.close();
+    }
+
+    public void test() throws Exception
+    {
+        DataOutputStream dout=new DataOutputStream(getS().getOutputStream());  
+        dout.writeUTF("h1.mp3");
+        dout.writeUTF("envoyer");
+
+        FileInputStream inf=new FileInputStream(new File("h1.mp3"));
+        ObjectOutputStream out=new ObjectOutputStream(getS().getOutputStream());               
+        byte buf[] = new byte[1024];
+        int n;            
+        while((n=inf.read(buf))!=-1){
+            out.write(buf,0,n);
+        }
+        inf.close();
+        out.close();
+        dout.close();
     }
 }
