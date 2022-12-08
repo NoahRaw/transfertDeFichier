@@ -60,7 +60,6 @@ public class Serveur2{
             out.write(buf,0,n);  
         }
         out.close();                    
-        // sock.close();
     }
 
     public void recuperer(String name) throws Exception

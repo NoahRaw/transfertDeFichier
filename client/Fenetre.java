@@ -16,8 +16,10 @@ public class Fenetre extends JFileChooser
     {
         String result=new String();
         JFileChooser choose = new JFileChooser(FileSystemView.getFileSystemView().getHomeDirectory());
+        
         // Ouvrez le fichier
         int res = choose.showOpenDialog(null);
+        
         // Enregistrez le fichier
         // int res = choose.showSaveDialog(null);
         if (res == JFileChooser.APPROVE_OPTION) {

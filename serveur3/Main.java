@@ -18,8 +18,7 @@ public class Main{
             sv=new ServerSocket(63);
             s=sv.accept();
             serveur=new Serveur3(s);
-            // while(true)
-            // {
+            
             ObjectInputStream dis=new ObjectInputStream(serveur.getSock().getInputStream());  
             String todo=(String)dis.readObject();
             String fileName=(String)(String)dis.readObject();

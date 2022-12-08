@@ -122,8 +122,6 @@ public class BoutonListener implements ActionListener
         {
             getInterfaceClient().setVisible(false);
             InterfaceClient i=new InterfaceClient(1,getInterfaceClient().getC());
-            // InterfaceClient i=new InterfaceClient(3,getInterfaceClient().getC(),getInterfaceClient().getThreadTransfererFenetre(),getInterfaceClient().getEnvoyerAction());
-            // InterfaceClient i=new InterfaceClient(1);
         }
     }
 }
