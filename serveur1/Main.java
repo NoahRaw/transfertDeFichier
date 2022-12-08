@@ -18,20 +18,22 @@ public class Main{
             sv=new ServerSocket(61);
             s=sv.accept();
             serveur=new Serveur1(s);
-            while(true)
-            {
-                DataInputStream dis=new DataInputStream(serveur.getSock().getInputStream());  
-                String todo=(String)dis.readUTF();
-                String fileName=(String)dis.readUTF();
-                System.out.println("commande="+todo);
-                System.out.println("fileName="+fileName);
+            // while(true)
+            // {
+            ObjectInputStream dis=new ObjectInputStream(serveur.getSock().getInputStream());  
+            String todo=(String)dis.readObject();
+            String fileName=(String)(String)dis.readObject();
+            System.out.println("commande="+todo);
+            System.out.println("fileName="+fileName);
 
-                if(todo.equalsIgnoreCase("envoyer"))
-                {
-                    serveur.copyFile(fileName);
-                }
+            if(todo.equalsIgnoreCase("envoyer"))
+            {
+                serveur.copyFile(fileName,dis);
             }
-            // serveur.recuperer();
+            else
+            {
+                serveur.recuperer(fileName);
+            }
         } 
         catch (Exception ex) 
         {

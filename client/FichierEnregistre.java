@@ -3,10 +3,19 @@ package trans;
 import javax.swing.*;
 import java.io.*;
  
-public class FichierEnregistre extends JFrame 
+public class FichierEnregistre extends JPanel 
 {
-    private JList<String> langages;
+    //attribut
+    JList<String> langages;
   
+
+
+
+
+
+
+
+    //constructor
     public FichierEnregistre() 
     {
         //créer le modèle et ajouter des éléments
@@ -35,13 +44,31 @@ public class FichierEnregistre extends JFrame
         }
  
         //créer la liste des langages
-        langages = new JList<>(model);
+        setLangages(new JList<>(model));
         add(langages);
          
-        this.setTitle("Exemple de JList");  
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);     
-        this.setSize(200,200);
-        this.setLocationRelativeTo(null);
-        this.setVisible(true);
-    }       
+        // this.setTitle("Exemple de JList");  
+        // this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);     
+        this.setSize(500,500);
+        // this.setLocationRelativeTo(null);
+        // this.setVisible(true);
+    }
+    
+    
+
+
+
+
+
+
+
+
+    //getters and setters
+    public JList<String> getLangages() {
+        return langages;
+    }
+
+    public void setLangages(JList<String> langages) {
+        this.langages = langages;
+    }
 }

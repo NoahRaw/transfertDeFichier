@@ -109,7 +109,78 @@ public class Serveur{
         out.close();
     }
 
-    public void sendFileServeurSecondaire(String fileName) throws Exception
+    // public void sendFileServeurSecondaire(String fileName,String todo,ObjectInputStream in) throws Exception
+    // {
+    //     try 
+    //     {
+    //         BufferedWriter sortie = new BufferedWriter(new FileWriter("liste.txt", true));
+    //         sortie.write(fileName+"\n");
+    //         sortie.close();
+    //         System.out.println("Le texte a été écrit avec succès");
+    //     } 
+    //     catch (IOException e) 
+    //     {
+    //         e.printStackTrace();
+    //     }
+
+    //     FileOutputStream out =new FileOutputStream(new File("fichier"));
+    //     byte buf[] = new byte[1024];
+    //     int n;
+    //     int somme=0;
+    //     // while((n=in.read(buf))!=-1){
+    //     //     out.write(buf,0,n);
+    //     //     somme=somme+n;                                        
+    //     // }
+    //     System.out.println("available="+in.available());
+    //     while((n=in.read(buf))!=-1){
+    //         out.write(buf,0,n);
+    //         // System.out.print(n);
+    //     }
+    //     System.out.println("somme="+somme);
+    //     out.close();
+    //     System.out.println("fichier copier sur le serveur principal");                    
+
+    //     FileInputStream inf=new FileInputStream(new File("fichier"));
+    //     ObjectOutputStream out2=new ObjectOutputStream(getS1().getOutputStream());               
+    //     out2.writeObject(todo);
+    //     out2.writeObject(fileName);
+    //     buf = new byte[1024];
+    //     int somme2=0;            
+    //     while((somme2<somme/3)){
+    //         n=inf.read(buf);
+    //         somme2=somme2+n;
+    //         out2.write(buf,0,n);
+    //     }
+    //     System.out.println("somme2="+somme2);
+    //     System.out.println("fichier copie dans s1");
+
+    //     out2=new ObjectOutputStream(getS2().getOutputStream());               
+    //     out2.writeObject(todo);
+    //     out2.writeObject(fileName);
+    //     somme2=0;            
+    //     while(somme2<somme/3){
+    //         n=inf.read(buf);
+    //         somme2=somme2+n;
+    //         out2.write(buf,0,n);
+    //     }
+    //     System.out.println("somme2="+somme2);
+    //     out.close();
+
+    //     out2=new ObjectOutputStream(getS3().getOutputStream());               
+    //     out2.writeObject(todo);
+    //     out2.writeObject(fileName);
+    //     somme2=0;            
+    //     while((n=inf.read(buf))!=-1){
+    //         somme2=somme2+n;
+    //         out2.write(buf,0,n);
+    //     }
+    //     System.out.println("somme2="+somme2);
+    //     System.out.println("fichier copie avec succes");
+    //     out2.close();
+    //     inf.close();
+    // }
+
+    public void sendFileServeurSecondaire(String fileName,String todo,ObjectInputStream in) throws Exception
     {
         try 
         {
@@ -123,7 +194,6 @@ public class Serveur{
             e.printStackTrace();
         }
 
-        ObjectInputStream in=new ObjectInputStream(getSock().getInputStream());
         FileOutputStream out =new FileOutputStream(new File("fichier"));
         byte buf[] = new byte[1024];
         int n;
@@ -137,7 +207,11 @@ public class Serveur{
         out.close();                    
 
         FileInputStream inf=new FileInputStream(new File("fichier"));
-        ObjectOutputStream out2=new ObjectOutputStream(getS1().getOutputStream());               
+        ObjectOutputStream out2=new ObjectOutputStream(getS1().getOutputStream()); 
+        
+        out2.writeObject(todo);
+        out2.writeObject(fileName);
+        
         buf = new byte[1024];
         int somme2=0;            
         while((somme2<somme/3)){
@@ -146,9 +220,13 @@ public class Serveur{
             out2.write(buf,0,n);
         }
         System.out.println("somme2="+somme2);
-        out.close();
+        out2.writeObject("fin");
 
-        out2=new ObjectOutputStream(getS2().getOutputStream());               
+        out2=new ObjectOutputStream(getS2().getOutputStream());
+        
+        out2.writeObject(todo);
+        out2.writeObject(fileName);
+        
         somme2=0;            
         while(somme2<somme/3){
             n=inf.read(buf);
@@ -156,61 +234,68 @@ public class Serveur{
             out2.write(buf,0,n);
         }
         System.out.println("somme2="+somme2);
-        out.close();
+        out2.writeObject("fin");
 
         out2=new ObjectOutputStream(getS3().getOutputStream());               
+        
+        out2.writeObject(todo);
+        out2.writeObject(fileName);
+        
         somme2=0;            
         while((n=inf.read(buf))!=-1){
             somme2=somme2+n;
             out2.write(buf,0,n);
         }
         System.out.println("somme2="+somme2);
-        out2.close();
+        out2.writeObject("fin");
+
         inf.close();
     }
 
-    public void recuperer() throws Exception
+    public void recuperer(String name,String todo) throws Exception
     {
-        DataInputStream dis=new DataInputStream(getSock().getInputStream());  
-        String  name=(String)dis.readUTF();
-        //String name="h1.mp3";
         System.out.println("nom du fichier a recuperer recu:"+name);
 
-        DataOutputStream dout=new DataOutputStream(getS1().getOutputStream());  
-        dout.writeUTF(name);  
-        // dout.flush();  
-        // dout.close();  
-        System.out.println("nom du fichier a recuperer envoye au serveur secondaire:"+name);
+        ObjectOutputStream dout=new ObjectOutputStream(getS1().getOutputStream());  
+        dout.writeObject(todo);    
+        dout.writeObject(name);    
+        System.out.println("nom du fichier a recuperer envoye au serveur secondaire 1:"+name);
 
-        ObjectInputStream in=new ObjectInputStream(getS1().getInputStream());
         ObjectOutputStream out=new ObjectOutputStream(getSock().getOutputStream());
+        
+        ObjectInputStream in=new ObjectInputStream(getS1().getInputStream());
         byte buf[] = new byte[1024];
         int n;            
         while((n=in.read(buf))!=-1){
             out.write(buf,0,n);
         }
-        in.close();
+        // in.close();
         System.out.println("s1 reccuperer");
         
 
-        DataOutputStream dout1=new DataOutputStream(getS2().getOutputStream());  
-        dout1.writeUTF(name);  
+        ObjectOutputStream dout1=new ObjectOutputStream(getS2().getOutputStream());  
+        dout1.writeObject(todo);  
+        dout1.writeObject(name);
+        System.out.println("nom du fichier a recuperer envoye au serveur secondaire 2:"+name);  
         in=new ObjectInputStream(getS2().getInputStream()); 
         while((n=in.read(buf))!=-1){
             out.write(buf,0,n);
         }
-        in.close();
+        // in.close();
         System.out.println("s2 reccuperer");
 
-        DataOutputStream dout2=new DataOutputStream(getS3().getOutputStream());  
-        dout2.writeUTF(name);  
+        ObjectOutputStream dout2=new ObjectOutputStream(getS3().getOutputStream());  
+        dout2.writeObject(todo);  
+        dout2.writeObject(name);  
+        System.out.println("nom du fichier a recuperer envoye au serveur secondaire 3:"+name);  
         in=new ObjectInputStream(getS3().getInputStream());
         while((n=in.read(buf))!=-1){
             out.write(buf,0,n);
         }
-        in.close();
+        out.writeObject("fin");
+        // in.close();
         System.out.println("s3 reccuperer");
-        out.close();
+        // out.close();
         System.out.println("fichier envoyer au client:"+name);
     }
 

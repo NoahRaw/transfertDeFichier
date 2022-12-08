@@ -16,6 +16,9 @@ public class BoutonListener implements ActionListener
 {
     //---------- attribut -----------//
     InterfaceClient interfaceClient;
+    int idBouton=0;
+    String aRecuperer;
+    FichierEnregistre fichierEnregistre;
 
 
 
@@ -23,6 +26,10 @@ public class BoutonListener implements ActionListener
 
 
 
+
+    
+
+    
 
     //---------- cosnstructor -----------//
     public BoutonListener()
@@ -34,6 +41,17 @@ public class BoutonListener implements ActionListener
         this.interfaceClient = interfaceClient;
     }
 
+    public BoutonListener(InterfaceClient interfaceClient2, int i,FichierEnregistre fichierEnregistre) {
+        this.interfaceClient = interfaceClient2;
+        setFichierEnregistre(fichierEnregistre);
+        setIdBouton(i);
+    }
+
+    public BoutonListener(InterfaceClient interfaceClient2, int i) 
+    {
+        setInterfaceClient(interfaceClient2);
+        setIdBouton(i);
+    }
 
 
 
@@ -42,15 +60,41 @@ public class BoutonListener implements ActionListener
 
 
 
+
+
+    
+
+    
 
     //---------- getters and setters -----------//
+    public String getaRecuperer() {
+        return aRecuperer;
+    }
+
+    public void setaRecuperer(String aRecuperer) {
+        this.aRecuperer = aRecuperer;
+    }
+    
     public InterfaceClient getInterfaceClient() {
         return interfaceClient;
     }
     public void setInterfaceClient(InterfaceClient interfaceClient) {
         this.interfaceClient = interfaceClient;
-    }   
+    }
+    
+    public int getIdBouton() {
+        return idBouton;
+    }
+    public void setIdBouton(int idBouton) {
+        this.idBouton = idBouton;
+    }
 
+    public FichierEnregistre getFichierEnregistre() {
+        return fichierEnregistre;
+    }
+    public void setFichierEnregistre(FichierEnregistre idBouton) {
+        this.fichierEnregistre = idBouton;
+    }
 
 
 
@@ -64,9 +108,22 @@ public class BoutonListener implements ActionListener
     //---------- action -----------//
     public void actionPerformed(ActionEvent e)
     {
-        getInterfaceClient().setVisible(false);
-        InterfaceClient i=new InterfaceClient(1,getInterfaceClient().getC(),getInterfaceClient().getThreadTransfererFenetre(),getInterfaceClient().getEnvoyerAction());
-        // InterfaceClient i=new InterfaceClient(3,getInterfaceClient().getC(),getInterfaceClient().getThreadTransfererFenetre(),getInterfaceClient().getEnvoyerAction());
-        // InterfaceClient i=new InterfaceClient(1);
+        if(getIdBouton()==1)
+        {
+            getInterfaceClient().setVisible(false);
+            InterfaceClient i=new InterfaceClient(getFichierEnregistre().getLangages().getSelectedValue(),getInterfaceClient().getC());    
+        }
+        else if(getIdBouton()==2)
+        {
+            getInterfaceClient().setVisible(false);
+            InterfaceClient i=new InterfaceClient(2,getInterfaceClient().getC());    
+        }
+        else
+        {
+            getInterfaceClient().setVisible(false);
+            InterfaceClient i=new InterfaceClient(1,getInterfaceClient().getC());
+            // InterfaceClient i=new InterfaceClient(3,getInterfaceClient().getC(),getInterfaceClient().getThreadTransfererFenetre(),getInterfaceClient().getEnvoyerAction());
+            // InterfaceClient i=new InterfaceClient(1);
+        }
     }
 }

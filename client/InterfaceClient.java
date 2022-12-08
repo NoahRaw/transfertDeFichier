@@ -22,10 +22,10 @@ import java.awt.GridLayout;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import listener.*;
-import trans.Client;
 
 public class InterfaceClient extends JFrame{
     //attribut
@@ -44,7 +44,7 @@ public class InterfaceClient extends JFrame{
 
 
     //constructor
-    public InterfaceClient(int idMipoitra,Client c,ThreadTransfererFenetre threadTransfererFenetre,EnvoyerAction envoyerAction)
+    public InterfaceClient(int idMipoitra,Client c)
     {
         setIdMipoitra(idMipoitra);
         setThreadTransfererFenetre(threadTransfererFenetre);
@@ -56,8 +56,11 @@ public class InterfaceClient extends JFrame{
             panel.setSize(500,500);
             panel.setLayout(new BorderLayout());
             JButton importer= new JButton("importer un fichier");
-            importer.addActionListener(new BoutonListener(this));
+            importer.addActionListener(new BoutonListener(this,0));
+            JButton recupererButton= new JButton("recuperer un fichier");
+            recupererButton.addActionListener(new BoutonListener(this,2));
             panel.add(importer, BorderLayout.CENTER);
+            panel.add(recupererButton, BorderLayout.SOUTH);
             this.add(panel);
             this.setSize(500,500);
             this.setTitle("Transfer de fichier");
@@ -70,24 +73,34 @@ public class InterfaceClient extends JFrame{
         else if(getIdMipoitra()==1)
         {
             String chemin=getChemin();
-            String[] cut=chemin.split("\\\\",-2);
-
-            System.out.println(cut[cut.length-1]);
-
             try {
-                DataOutputStream dout=new DataOutputStream(getC().getS().getOutputStream());  
-                getEnvoyerAction().setIndication(1);
-                // ObjectOutputStream out=new ObjectOutputStream(getC().getS().getOutputStream());
-                // out.writeObject(2);
-                dout.writeUTF("envoyer");
-                dout.writeUTF(cut[cut.length-1]);
                 getC().sendFileServeurPrincipal(chemin);
-                // getC().getS().getOutputStream().flush();
             } catch (Exception e) {
                 // TODO: handle exception
                 e.printStackTrace();
             }
-            // getThreadTransfererFenetre().setOuvrir(1);
+        }
+        else if(getIdMipoitra()==2)
+        {
+            JPanel panel=new JPanel();
+            // panel.setSize(500,500);
+            panel.setLayout(new BorderLayout());
+            JButton importer= new JButton("choisir");
+            panel.add(importer, BorderLayout.SOUTH);
+
+            FichierEnregistre fichierEnregistre=new FichierEnregistre();
+            panel.add(fichierEnregistre, BorderLayout.CENTER);
+            System.out.println("valeur="+fichierEnregistre.getLangages().getSelectedValue());
+            importer.addActionListener(new BoutonListener(this,1,fichierEnregistre));
+
+            this.add(panel);
+            this.setSize(600,600);
+            this.setTitle("Transfer de fichier");
+            this.setResizable(false);
+            this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            // this.pack();
+            this.setVisible(true);
+            this.setLocationRelativeTo(null);
         }
         else if(getIdMipoitra()==3)
         {
@@ -97,40 +110,17 @@ public class InterfaceClient extends JFrame{
         }
     }
 
-    public InterfaceClient(int idMipoitra)
+    public InterfaceClient(String aRecuperer,Client c)
     {
         setIdMipoitra(idMipoitra);
-        
-        if(getIdMipoitra()==0)
-        {
-            JPanel panel=new JPanel();
-            panel.setSize(500,500);
-            panel.setLayout(new BorderLayout());
-            JButton importer= new JButton("importer un fichier");
-            importer.addActionListener(new BoutonListener(this));
-            panel.add(importer, BorderLayout.CENTER);
-            this.add(panel);
+        setC(c);
+        System.out.println("v2="+aRecuperer);
+        try {
+            getC().recuperer(aRecuperer);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
         }
-        else if(getIdMipoitra()==1)
-        {
-            String chemin=getChemin();
-            String[] cut=chemin.split("\\\\",-2);
-
-            System.out.println(cut[cut.length-1]);
-
-            // DataOutputStream dout=new DataOutputStream(getC().getS().getOutputStream());  
-            // dout.writeUTF("envoyer");
-            // dout.writeUTF(cut[cut.length-1]);
-            // getC().sendFileServeurPrincipal(chemin);
-        }
-        
-        this.setSize(500,500);
-		this.setTitle("Transfer de fichier");
-		this.setResizable(false);
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		this.pack();
-		this.setVisible(true);
-		this.setLocationRelativeTo(null);
     }
 
 
