@@ -90,7 +90,7 @@ public class InterfaceClient extends JFrame{
 
             FichierEnregistre fichierEnregistre=new FichierEnregistre();
             panel.add(fichierEnregistre, BorderLayout.CENTER);
-            System.out.println("valeur="+fichierEnregistre.getLangages().getSelectedValue());
+            // System.out.println("valeur="+fichierEnregistre.getLangages().getSelectedValue());
             importer.addActionListener(new BoutonListener(this,1,fichierEnregistre));
 
             this.add(panel);
@@ -114,7 +114,7 @@ public class InterfaceClient extends JFrame{
     {
         setIdMipoitra(idMipoitra);
         setC(c);
-        System.out.println("v2="+aRecuperer);
+        // System.out.println("v2="+aRecuperer);
         try {
             getC().recuperer(aRecuperer);
         } catch (Exception e) {
@@ -178,7 +178,7 @@ public class InterfaceClient extends JFrame{
         // int res = choose.showSaveDialog(null);
         if (res == JFileChooser.APPROVE_OPTION) {
             File file = choose.getSelectedFile();
-            System.out.println(file.getAbsolutePath());
+            // System.out.println(file.getAbsolutePath());
             result=file.getAbsolutePath();
         }
         return result;

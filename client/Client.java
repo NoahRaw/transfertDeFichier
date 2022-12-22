@@ -1,6 +1,7 @@
 package trans;
 
 import java.net.*;
+import java.util.Vector;
 import java.util.concurrent.ExecutionException;
 import java.io.*;
  
@@ -9,6 +10,9 @@ public class Client {
   
     public Client(Socket s) {
         this.s = s;
+    }
+
+    public Client() {
     }
 
     public Socket getS() {
@@ -27,7 +31,7 @@ public class Client {
             String[] cut=fileName.split("\\\\",-2);             
             sortie.write(cut[cut.length-1]+"\n");
             sortie.close();
-            System.out.println("Le texte a été écrit avec succès");
+            System.out.println("fichier importe avec succes");
         }
         catch (IOException e) 
         {
@@ -67,6 +71,7 @@ public class Client {
         while((n=in.read(buf))!=-1){
             out.write(buf,0,n);
         }
+        System.out.println("fichier recuperer avec succes");
         // in.close();
         out.close();
         // dout.close();
@@ -88,5 +93,39 @@ public class Client {
         inf.close();
         out.close();
         dout.close();
+    }
+
+    public Vector lire(File file)
+     {
+         Vector list=new Vector();
+         try
+        {
+            int i=0;
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            String chaine=br.readLine();
+            while (chaine!=null)
+            {
+                list.add(chaine);
+                chaine=br.readLine();
+            }
+            br.close();
+
+            } catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        return list;
+     }
+
+     public Vector<String> configurer(Vector v)
+     {
+        String[] r1=((String)v.get(0)).split(":",-2);
+        String[] r2=((String)v.get(1)).split(":",-2);
+
+        Vector<String> result=new Vector<String>();
+        result.add(r1[1]);
+        result.add(r2[1]);
+
+        return result;
     }
 }

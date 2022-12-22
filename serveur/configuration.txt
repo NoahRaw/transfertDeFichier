@@ -1,0 +1,4 @@
+port_serveur_principal:60
+host_et_port_serveur_secondaire1:localhost,61
+host_et_port_serveur_secondaire2:localhost,62
+host_et_port_serveur_secondaire3:localhost,63

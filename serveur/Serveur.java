@@ -4,6 +4,7 @@ import java.net.*;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Vector;
  
 public class Serveur{
     //attribut
@@ -72,6 +73,10 @@ public class Serveur{
         this.sock = sock;
     }
 
+    public Serveur() {
+        
+    }
+
     
 
 
@@ -88,7 +93,7 @@ public class Serveur{
             BufferedWriter sortie = new BufferedWriter(new FileWriter("liste.txt", true));
             sortie.write(fileName+"\n");
             sortie.close();
-            System.out.println("Le texte a été écrit avec succès");
+            System.out.println("fichier importer avec succes");
         } 
         catch (IOException e) 
         {
@@ -105,7 +110,7 @@ public class Serveur{
             out.write(buf,0,n);
             somme=somme+n;                                        
         }
-        System.out.println("somme="+somme);
+        // System.out.println("somme="+somme);
         out.close();
     }
 
@@ -116,7 +121,7 @@ public class Serveur{
             BufferedWriter sortie = new BufferedWriter(new FileWriter("liste.txt", true));
             sortie.write(fileName+"\n");
             sortie.close();
-            System.out.println("Le texte a été écrit avec succès");
+            System.out.println("fichier importer avec succes");
         } 
         catch (IOException e) 
         {
@@ -127,12 +132,12 @@ public class Serveur{
         byte buf[] = new byte[1024];
         int n;
         int somme=0;
-        System.out.println(in.available());
+        // System.out.println(in.available());
         while((n=in.read(buf))!=-1){
             out.write(buf,0,n);
             somme=somme+n;                                        
         }
-        System.out.println("somme="+somme);
+        // System.out.println("somme="+somme);
         out.close();                    
 
         FileInputStream inf=new FileInputStream(new File("fichier"));
@@ -148,7 +153,7 @@ public class Serveur{
             somme2=somme2+n;
             out2.write(buf,0,n);
         }
-        System.out.println("somme2="+somme2);
+        // System.out.println("somme2="+somme2);
         out2.writeObject("fin");
 
         out2=new ObjectOutputStream(getS2().getOutputStream());
@@ -175,7 +180,7 @@ public class Serveur{
             somme2=somme2+n;
             out2.write(buf,0,n);
         }
-        System.out.println("somme2="+somme2);
+        // System.out.println("somme2="+somme2);
         out2.writeObject("fin");
 
         inf.close();
@@ -188,7 +193,7 @@ public class Serveur{
         ObjectOutputStream dout=new ObjectOutputStream(getS1().getOutputStream());  
         dout.writeObject(todo);    
         dout.writeObject(name);    
-        System.out.println("nom du fichier a recuperer envoye au serveur secondaire 1:"+name);
+        // System.out.println("nom du fichier a recuperer envoye au serveur secondaire 1:"+name);
 
         ObjectOutputStream out=new ObjectOutputStream(getSock().getOutputStream());
         
@@ -199,31 +204,31 @@ public class Serveur{
             out.write(buf,0,n);
         }
         // in.close();
-        System.out.println("s1 reccuperer");
+        System.out.println("reccuperer pour le serveur 1");
         
 
         ObjectOutputStream dout1=new ObjectOutputStream(getS2().getOutputStream());  
         dout1.writeObject(todo);  
         dout1.writeObject(name);
-        System.out.println("nom du fichier a recuperer envoye au serveur secondaire 2:"+name);  
+        // System.out.println("nom du fichier a recuperer envoye au serveur secondaire 2:"+name);  
         in=new ObjectInputStream(getS2().getInputStream()); 
         while((n=in.read(buf))!=-1){
             out.write(buf,0,n);
         }
         // in.close();
-        System.out.println("s2 reccuperer");
+        System.out.println("reccuperer pour le serveur 2");
 
         ObjectOutputStream dout2=new ObjectOutputStream(getS3().getOutputStream());  
         dout2.writeObject(todo);  
         dout2.writeObject(name);  
-        System.out.println("nom du fichier a recuperer envoye au serveur secondaire 3:"+name);  
+        // System.out.println("nom du fichier a recuperer envoye au serveur secondaire 3:"+name);  
         in=new ObjectInputStream(getS3().getInputStream());
         while((n=in.read(buf))!=-1){
             out.write(buf,0,n);
         }
         out.writeObject("fin");
         // in.close();
-        System.out.println("s3 reccuperer");
+        System.out.println("reccuperer pour le serveur 3");
         // out.close();
         System.out.println("fichier envoyer au client:"+name);
     }
@@ -234,20 +239,64 @@ public class Serveur{
         String  name=(String)dis.readUTF();
         String  commande=(String)dis.readUTF();
         //String name="h1.mp3";
-        System.out.println("nom du fichier a recuperer recu:"+name);
-        System.out.println("nom du fichier a recuperer recu:"+commande);
+        // System.out.println("nom du fichier a recuperer recu:"+name);
+        // System.out.println("nom du fichier a recuperer recu:"+commande);
 
         ObjectInputStream in=new ObjectInputStream(getSock().getInputStream());
         FileOutputStream out =new FileOutputStream(new File("h3.mp3"));
         byte buf[] = new byte[1024];
         int n;
         int somme=0;
-        System.out.println(in.available());
+        // System.out.println(in.available());
         while((n=in.read(buf))!=-1){
             out.write(buf,0,n);
             somme=somme+n;                                        
         }
-        System.out.println("somme="+somme);
+        // System.out.println("somme="+somme);
         out.close();                    
+    }
+
+    public Vector lire(File file)
+     {
+         Vector list=new Vector();
+         try
+        {
+            int i=0;
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            String chaine=br.readLine();
+            while (chaine!=null)
+            {
+                list.add(chaine);
+                chaine=br.readLine();
+            }
+            br.close();
+
+            } catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        return list;
+     }
+
+     public Vector configurer(Vector v)
+     {
+        String[] r1=((String)v.get(0)).split(":",-2);
+        
+        String[] r2=((String)v.get(1)).split(":",-2);
+        String[] r22=r2[1].split(",",-2);
+        
+        String[] r3=((String)v.get(2)).split(":",-2);
+        String[] r33=r3[1].split(",",-2);
+
+        String[] r4=((String)v.get(3)).split(":",-2);
+        String[] r44=r4[1].split(",",-2);
+
+        Vector result=new Vector();
+        result.add(r22);
+        result.add(r33);
+        result.add(r44);
+        result.add(r1[1]);
+
+        return result;
     }
 }

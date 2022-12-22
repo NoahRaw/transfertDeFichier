@@ -35,8 +35,8 @@ public class FichierEnregistre extends JPanel
                 model.addElement(line);
             }
             fr.close();    
-            System.out.println("Contenu du fichier: ");
-            System.out.println(sb.toString());  
+            // System.out.println("Contenu du fichier: ");
+            // System.out.println(sb.toString());  
         }
         catch(IOException e)
         {

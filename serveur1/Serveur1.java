@@ -4,6 +4,7 @@ import java.net.*;
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Vector;
  
 public class Serveur1{
     //attribut
@@ -42,6 +43,10 @@ public class Serveur1{
         this.sock = sock;
     }
 
+    public Serveur1() {
+        
+    }
+
     
 
 
@@ -65,7 +70,7 @@ public class Serveur1{
 
     public void recuperer(String name) throws Exception
     {
-        System.out.println("nom recuperer:"+name);
+        // System.out.println("nom recuperer:"+name);
         
         FileInputStream inf=new FileInputStream(new File("liste_fichier\\"+name));
         ObjectOutputStream out=new ObjectOutputStream(getSock().getOutputStream());               
@@ -77,5 +82,37 @@ public class Serveur1{
         inf.close();
         out.close();
         System.out.println("fichier a recuperer envoye:"+name);
+    }
+
+    public Vector lire(File file)
+     {
+         Vector list=new Vector();
+         try
+        {
+            int i=0;
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
+            String chaine=br.readLine();
+            while (chaine!=null)
+            {
+                list.add(chaine);
+                chaine=br.readLine();
+            }
+            br.close();
+
+            } catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        return list;
+     }
+
+     public Vector configurer(Vector v)
+     {
+        String[] r1=((String)v.get(0)).split(":",-2);
+
+        Vector result=new Vector();
+        result.add(r1[1]);
+
+        return result;
     }
 }

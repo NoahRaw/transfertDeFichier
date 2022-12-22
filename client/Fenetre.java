@@ -24,7 +24,7 @@ public class Fenetre extends JFileChooser
         // int res = choose.showSaveDialog(null);
         if (res == JFileChooser.APPROVE_OPTION) {
             File file = choose.getSelectedFile();
-            System.out.println(file.getAbsolutePath());
+            // System.out.println(file.getAbsolutePath());
         }
         return result;
     }

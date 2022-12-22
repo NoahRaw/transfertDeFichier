@@ -1,6 +1,7 @@
 package main;
 
 import java.net.*;
+import java.util.Vector;
 
 import trans.*;
 
@@ -13,8 +14,10 @@ public class Main
 {
   public static void main (String [] args ) throws IOException, Exception
     { 
-      Socket s=new Socket("localhost",60);
-      Client client=new Client(s);
+      Client client=new Client();
+      Vector<String> configuration=client.configurer(client.lire(new File("configuration.txt")));
+      Socket s=new Socket(configuration.get(0),Integer.parseInt(configuration.get(1)));
+      client=new Client(s);
 
       InterfaceClient interfaceClient=new InterfaceClient(0,client);
     }
